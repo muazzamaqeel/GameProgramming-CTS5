@@ -8,7 +8,7 @@ public class Map {
 //       this.maze2 = ;
 //       this.maze3 = ;
 //    }
-
+    // TEST
     public int[][] getMaze1() {
         return maze1;
     }
@@ -20,4 +20,6 @@ public class Map {
     public int[][] getMaze3() {
         return maze3;
     }
+
+    //TEST
 }

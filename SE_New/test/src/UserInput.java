@@ -3,6 +3,15 @@ public class UserInput {
     private static boolean key_w;
     private static boolean key_d;
     private static boolean key_s;
+    private static boolean key_space;
+
+    public static boolean isKey_space() {
+        return key_space;
+    }
+
+    public void setKey_space(boolean key_space) {
+        this.key_space = key_space;
+    }
 
     public static boolean isKey_a() {
         return key_a;

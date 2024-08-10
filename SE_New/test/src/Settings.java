@@ -4,9 +4,14 @@ import java.util.Hashtable;
 
 public class Settings extends JFrame {
     private final MapSelectionListener listener;
-    protected boolean map1;
-    protected boolean map2;
-    protected boolean map3;
+    protected static int newGhostSpeed;
+    protected static int newPacmanSpeed;
+    protected static boolean PacmanSpeedChanged = false;
+    protected static boolean GhostSpeedChanged = false;
+    protected static boolean default_map;
+    protected static boolean map1;
+    protected static boolean map2;
+    protected static boolean map3;
 
     public Settings(MapSelectionListener listener) {
         this.listener = listener;
@@ -82,18 +87,14 @@ public class Settings extends JFrame {
 
         // Update Pacman speed
         pacmanSpeedSlider.addChangeListener(e -> {
-            int newPacmanSpeed = ((JSlider) e.getSource()).getValue();
-            System.out.println("New Pacman Speed: " + newPacmanSpeed);
-            // Logic how to actually change is to be implemented
-//            Pacman.getInstance(). // change speed
+            PacmanSpeedChanged = true;
+            newPacmanSpeed = ((JSlider) e.getSource()).getValue();
         });
 
         // Update Ghost speed
         ghostSpeedSlider.addChangeListener(e -> {
-            int newGhostSpeed = ((JSlider) e.getSource()).getValue();
-            System.out.println("New Ghost Speed: " + newGhostSpeed);
-            // Logic how to actually change is to be implemented
-            //same here
+            GhostSpeedChanged = true;
+            newGhostSpeed = ((JSlider) e.getSource()).getValue();
         });
 
         // Update the map
@@ -101,13 +102,25 @@ public class Settings extends JFrame {
             String selectedMap = (String) mapOptions.getSelectedItem();
             System.out.println("Selected Map: " + selectedMap);
 
-            if ((int)mapOptions.getSelectedItem() == 1)
+            if (mapOptions.getSelectedIndex() == 0) {
                 map1 = true;
-            if ((int)mapOptions.getSelectedItem() == 2)
+                map2 = false;
+                map3 = false;
+            } else if (mapOptions.getSelectedIndex() == 1) {
+                map1 = false;
                 map2 = true;
-            if ((int)mapOptions.getSelectedItem() == 3)
+                map3 = false;
+            } else if (mapOptions.getSelectedIndex() == 2) {
+                map1 = false;
+                map2 = false;
                 map3 = true;
+            } else {
+                map1 = false;
+                map2 = false;
+                map3 = false;
+            }
         });
+
     }
 
     private void configureSlider(JSlider slider) {
@@ -122,16 +135,28 @@ public class Settings extends JFrame {
         slider.setLabelTable(labelTable);
     }
 
-    public boolean isMap1() {
+    public static boolean isMap1() {
         return map1;
     }
 
-    public boolean isMap2() {
+    public static boolean isMap2() {
         return map2;
     }
 
-    public boolean isMap3() {
+    public static boolean isMap3() {
         return map3;
+    }
+    public static int getNewGhostSpeed(){
+        return newGhostSpeed;
+    }
+    public static int getNewPacmanSpeed(){
+        return newPacmanSpeed;
+    }
+    public static boolean isPacmanSpeedChanged(){
+        return PacmanSpeedChanged;
+    }
+    public static boolean isGhostSpeedChanged(){
+        return GhostSpeedChanged;
     }
 }
 

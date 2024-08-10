@@ -1,10 +1,16 @@
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+
 
 public class HomeScreen extends JFrame {
     private Settings settings;
+    private AudioInputStream audioInputStream;
+    private Clip clip;
 
     public HomeScreen() {
         initUI();
@@ -27,6 +33,16 @@ public class HomeScreen extends JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
 
+        try {
+            startIntroMusic();
+        } catch (UnsupportedAudioFileException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (LineUnavailableException e) {
+            throw new RuntimeException(e);
+        }
+
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
         panel.setBackground(Color.BLACK);
@@ -43,6 +59,7 @@ public class HomeScreen extends JFrame {
         gbc.insets = new Insets(20, 0, 20, 0);
         panel.add(textLabel, gbc);
 
+        //SE_New/test/src/game/images/Main_Window_Wallpaper.jpg
         ImageIcon icon = new ImageIcon("src/game/images/Main_Window_Wallpaper.jpg");
         JLabel imageLabel = new JLabel(icon);
         gbc.gridy = 1;
@@ -62,9 +79,16 @@ public class HomeScreen extends JFrame {
         playBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GameFrame d = new GameFrame();
-                d.setVisible(true);
                 HomeScreen.this.closeWindow();
+                LoadingScreen loadingScreen = new LoadingScreen(HomeScreen.this);
+                loadingScreen.startLoading();
+
+                try {
+                    stopMusic();
+                } catch (LineUnavailableException ex) {
+                    throw new RuntimeException(ex);
+                }
+
             }
         });
         gbc.gridx = 1;
@@ -98,6 +122,22 @@ public class HomeScreen extends JFrame {
         panel.add(Box.createHorizontalStrut(200), gbc);
 
         add(panel);
+    }
+                                            //SE_New/test/
+    public void startIntroMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        File audioFile = new File("src/game/music/Pac-ManWorld.wav");
+        audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+
+        clip = AudioSystem.getClip();
+        //clip.stop();
+        // Open the audio stream and start playing
+        clip.open(audioInputStream);
+        clip.start();
+    }
+
+    public void stopMusic() throws LineUnavailableException {
+        clip.stop();
+        clip = AudioSystem.getClip();
     }
 
     private void openSettings() {
